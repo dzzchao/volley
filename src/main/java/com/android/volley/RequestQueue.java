@@ -84,7 +84,7 @@ public class RequestQueue {
      * @param cache A Cache to use for persisting responses to disk
      * @param network A Network interface for performing HTTP requests
      * @param threadPoolSize Number of network dispatcher threads to create
-     * @param delivery A ResponseDelivery interface for posting responses and errors
+     * @param delivery A ResponseDelivery interface for posting responses and errors 发布响应和错误的响应传递接口
      */
     public RequestQueue(
             Cache cache, Network network, int threadPoolSize, ResponseDelivery delivery) {
@@ -99,7 +99,7 @@ public class RequestQueue {
      *
      * @param cache A Cache to use for persisting responses to disk
      * @param network A Network interface for performing HTTP requests
-     * @param threadPoolSize Number of network dispatcher threads to create
+     * @param threadPoolSize Number of network dispatcher threads to create  网络分发线程数量，默认是4个
      */
     public RequestQueue(Cache cache, Network network, int threadPoolSize) {
         this(
@@ -111,9 +111,9 @@ public class RequestQueue {
 
     /**
      * Creates the worker pool. Processing will not begin until {@link #start()} is called.
-     *
-     * @param cache A Cache to use for persisting responses to disk
-     * @param network A Network interface for performing HTTP requests
+     * 直到调用 start() 方法才会开始处理。
+     * @param cache A Cache to use for persisting responses to disk 用于持久化磁盘响应的缓存
+     * @param network A Network interface for performing HTTP requests 执行 http 请求的接口
      */
     public RequestQueue(Cache cache, Network network) {
         this(cache, network, DEFAULT_NETWORK_THREAD_POOL_SIZE);
@@ -122,12 +122,14 @@ public class RequestQueue {
     /** Starts the dispatchers in this queue. */
     public void start() {
         stop(); // Make sure any currently running dispatchers are stopped.
+        //确保当前运行的 dispatchers 停止。
         // Create the cache dispatcher and start it.
         mCacheDispatcher = new CacheDispatcher(mCacheQueue, mNetworkQueue, mCache, mDelivery);
         mCacheDispatcher.start();
 
         // Create network dispatchers (and corresponding threads) up to the pool size.
         for (int i = 0; i < mDispatchers.length; i++) {
+            // 线程
             NetworkDispatcher networkDispatcher =
                     new NetworkDispatcher(mNetworkQueue, mNetwork, mCache, mDelivery);
             mDispatchers[i] = networkDispatcher;

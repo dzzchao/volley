@@ -100,7 +100,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
     @GuardedBy("mLock")
     private boolean mCanceled = false;
 
-    /** Whether or not a response has been delivered for this request yet. */
+    /** Whether or not a response has been delivered for this request yet. 是否已经为该请求提供响应 whether or not 是否 */
     @GuardedBy("mLock")
     private boolean mResponseDelivered = false;
 
@@ -556,7 +556,8 @@ public abstract class Request<T> implements Comparable<Request<T>> {
 
     /**
      * Mark this request as having a response delivered on it. This can be used later in the
-     * request's lifetime for suppressing identical responses.
+     * request's lifetime for suppressing（抑制） identical（相同的） responses.
+     * 将这个请求标记为已经对其响应，以后可以用来在请求的生命周期中抑制相同的响应。
      */
     public void markDelivered() {
         synchronized (mLock) {
@@ -564,7 +565,7 @@ public abstract class Request<T> implements Comparable<Request<T>> {
         }
     }
 
-    /** Returns true if this request has had a response delivered for it. */
+    /** Returns true if this request has had a response delivered for it.  如果已经对这个请求做出了响应，就return true*/
     public boolean hasHadResponseDelivered() {
         synchronized (mLock) {
             return mResponseDelivered;
