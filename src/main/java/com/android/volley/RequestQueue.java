@@ -43,7 +43,8 @@ public class RequestQueue {
         void onRequestFinished(Request<T> request);
     }
 
-    /** Used for generating monotonically-increasing sequence numbers for requests. */
+    /** Used for generating monotonically-increasing（单调递增） sequence numbers for requests.
+     * 生成序列号 */
     private final AtomicInteger mSequenceGenerator = new AtomicInteger();
 
     /**
@@ -218,9 +219,11 @@ public class RequestQueue {
 
         // If the request is uncacheable, skip the cache queue and go straight to the network.
         if (!request.shouldCache()) {
+            //如果不需要 Cache ，就直接
             mNetworkQueue.add(request);
             return request;
         }
+        //如果需要 Cache
         mCacheQueue.add(request);
         return request;
     }
