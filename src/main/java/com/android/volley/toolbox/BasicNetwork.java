@@ -17,6 +17,7 @@
 package com.android.volley.toolbox;
 
 import android.os.SystemClock;
+
 import com.android.volley.AuthFailureError;
 import com.android.volley.Cache;
 import com.android.volley.Cache.Entry;
@@ -32,6 +33,7 @@ import com.android.volley.ServerError;
 import com.android.volley.TimeoutError;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -46,7 +48,9 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-/** A network performing Volley requests over an {@link HttpStack}. */
+/**
+ * A network performing Volley requests over an {@link HttpStack}.
+ */
 public class BasicNetwork implements Network {
     protected static final boolean DEBUG = VolleyLog.DEBUG;
 
@@ -56,9 +60,10 @@ public class BasicNetwork implements Network {
 
     /**
      * @deprecated Should never have been exposed in the API. This field may be removed in a future
-     *     release of Volley.
+     * release of Volley.
      */
-    @Deprecated protected final HttpStack mHttpStack;
+    @Deprecated
+    protected final HttpStack mHttpStack;
 
     private final BaseHttpStack mBaseHttpStack;
 
@@ -67,7 +72,7 @@ public class BasicNetwork implements Network {
     /**
      * @param httpStack HTTP stack to be used
      * @deprecated use {@link #BasicNetwork(BaseHttpStack)} instead to avoid depending on Apache
-     *     HTTP. This method may be removed in a future release of Volley.
+     * HTTP. This method may be removed in a future release of Volley.
      */
     @Deprecated
     public BasicNetwork(HttpStack httpStack) {
@@ -78,9 +83,9 @@ public class BasicNetwork implements Network {
 
     /**
      * @param httpStack HTTP stack to be used
-     * @param pool a buffer pool that improves GC performance in copy operations
+     * @param pool      a buffer pool that improves GC performance in copy operations
      * @deprecated use {@link #BasicNetwork(BaseHttpStack, ByteArrayPool)} instead to avoid
-     *     depending on Apache HTTP. This method may be removed in a future release of Volley.
+     * depending on Apache HTTP. This method may be removed in a future release of Volley.
      */
     @Deprecated
     public BasicNetwork(HttpStack httpStack, ByteArrayPool pool) {
@@ -89,7 +94,9 @@ public class BasicNetwork implements Network {
         mPool = pool;
     }
 
-    /** @param httpStack HTTP stack to be used */
+    /**
+     * @param httpStack HTTP stack to be used
+     */
     public BasicNetwork(BaseHttpStack httpStack) {
         // If a pool isn't passed in, then build a small default pool that will give us a lot of
         // benefit and not use too much memory.
@@ -98,7 +105,7 @@ public class BasicNetwork implements Network {
 
     /**
      * @param httpStack HTTP stack to be used
-     * @param pool a buffer pool that improves GC performance in copy operations
+     * @param pool      a buffer pool that improves GC performance in copy operations
      */
     public BasicNetwork(BaseHttpStack httpStack, ByteArrayPool pool) {
         mBaseHttpStack = httpStack;
@@ -109,6 +116,13 @@ public class BasicNetwork implements Network {
         mPool = pool;
     }
 
+    /**
+     * 真正执行请求的方法
+     *
+     * @param request Request to process
+     * @return
+     * @throws VolleyError
+     */
     @Override
     public NetworkResponse performRequest(Request<?> request) throws VolleyError {
         long requestStart = SystemClock.elapsedRealtime();
@@ -117,9 +131,8 @@ public class BasicNetwork implements Network {
             byte[] responseContents = null;
             List<Header> responseHeaders = Collections.emptyList();
             try {
-                // Gather headers.
-                Map<String, String> additionalRequestHeaders =
-                        getCacheHeaders(request.getCacheEntry());
+                // Gather headers. 收集 Header
+                Map<String, String> additionalRequestHeaders = getCacheHeaders(request.getCacheEntry());
                 httpResponse = mBaseHttpStack.executeRequest(request, additionalRequestHeaders);
                 int statusCode = httpResponse.getStatusCode();
 
@@ -215,7 +228,9 @@ public class BasicNetwork implements Network {
         }
     }
 
-    /** Logs requests that took over SLOW_REQUEST_THRESHOLD_MS to complete. */
+    /**
+     * Logs requests that took over SLOW_REQUEST_THRESHOLD_MS to complete.
+     */
     private void logSlowRequests(
             long requestLifetime, Request<?> request, byte[] responseContents, int statusCode) {
         if (DEBUG || requestLifetime > SLOW_REQUEST_THRESHOLD_MS) {
@@ -276,7 +291,9 @@ public class BasicNetwork implements Network {
         VolleyLog.v("HTTP ERROR(%s) %d ms to fetch %s", what, (now - start), url);
     }
 
-    /** Reads the contents of an InputStream into a byte[]. */
+    /**
+     * Reads the contents of an InputStream into a byte[].
+     */
     private byte[] inputStreamToBytes(InputStream in, int contentLength)
             throws IOException, ServerError {
         PoolingByteArrayOutputStream bytes = new PoolingByteArrayOutputStream(mPool, contentLength);
@@ -311,7 +328,7 @@ public class BasicNetwork implements Network {
      * Converts Headers[] to Map&lt;String, String&gt;.
      *
      * @deprecated Should never have been exposed in the API. This method may be removed in a future
-     *     release of Volley.
+     * release of Volley.
      */
     @Deprecated
     protected static Map<String, String> convertHeaders(Header[] headers) {
@@ -324,13 +341,13 @@ public class BasicNetwork implements Network {
 
     /**
      * Combine cache headers with network response headers for an HTTP 304 response.
-     *
+     * <p>
      * <p>An HTTP 304 response does not have all header fields. We have to use the header fields
      * from the cache entry plus the new ones from the response. See also:
      * http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html#sec10.3.5
      *
      * @param responseHeaders Headers from the network response.
-     * @param entry The cached response.
+     * @param entry           The cached response.
      * @return The combined list of headers.
      */
     private static List<Header> combineHeaders(List<Header> responseHeaders, Entry entry) {

@@ -3,6 +3,8 @@
 apply plugin: 'com.android.library'
 
 android {
+  //Android 6.0不再支持 Apache HTTP client， 建议使用 HttpURLConnection 代替。
+  // 如果还想要继续使用 Apache HTTP client 的，请在build.gradle中添加下面的代码
   useLibrary 'org.apache.http.legacy'
 
   compileOptions {

@@ -85,6 +85,7 @@ public class NetworkDispatcher extends Thread {
     @Override
     public void run() {
         Process.setThreadPriority(Process.THREAD_PRIORITY_BACKGROUND);
+        // 不停的处理请求
         while (true) {
             try {
                 processRequest();
@@ -113,12 +114,14 @@ public class NetworkDispatcher extends Thread {
 
     @VisibleForTesting
     void processRequest(Request<?> request) {
+        // android.os.SystemClock.elapsedRealtime() 获取从设备boot后经历的时间值。
         long startTimeMs = SystemClock.elapsedRealtime();
         try {
             request.addMarker("network-queue-take");
 
             // If the request was cancelled already, do not perform the
             // network request.
+            //如果这个请求已经被取消，就不要执行这个请求了
             if (request.isCanceled()) {
                 request.finish("network-discard-cancelled");
                 request.notifyListenerResponseNotUsable();

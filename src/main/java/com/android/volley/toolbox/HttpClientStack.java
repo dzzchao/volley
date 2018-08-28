@@ -106,8 +106,7 @@ public class HttpClientStack implements HttpStack {
                     byte[] postBody = request.getPostBody();
                     if (postBody != null) {
                         HttpPost postRequest = new HttpPost(request.getUrl());
-                        postRequest.addHeader(
-                                HEADER_CONTENT_TYPE, request.getPostBodyContentType());
+                        postRequest.addHeader(HEADER_CONTENT_TYPE, request.getPostBodyContentType());
                         HttpEntity entity;
                         entity = new ByteArrayEntity(postBody);
                         postRequest.setEntity(entity);
