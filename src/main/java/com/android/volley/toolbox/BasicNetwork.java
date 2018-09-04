@@ -137,7 +137,7 @@ public class BasicNetwork implements Network {
                 int statusCode = httpResponse.getStatusCode();
 
                 responseHeaders = httpResponse.getHeaders();
-                // Handle cache validation.
+                // Handle cache validation. 如果是 304
                 if (statusCode == HttpURLConnection.HTTP_NOT_MODIFIED) {
                     Entry entry = request.getCacheEntry();
                     if (entry == null) {
@@ -161,21 +161,24 @@ public class BasicNetwork implements Network {
                 // Some responses such as 204s do not have content.  We must check.
                 InputStream inputStream = httpResponse.getContent();
                 if (inputStream != null) {
-                    responseContents =
-                            inputStreamToBytes(inputStream, httpResponse.getContentLength());
+                    //将输入流转成字节数组
+                    responseContents = inputStreamToBytes(inputStream, httpResponse.getContentLength());
                 } else {
+                    // 如果响应无内容
                     // Add 0 byte response as a way of honestly representing a
                     // no-content request.
                     responseContents = new byte[0];
                 }
 
-                // if the request is slow, log it.
+                // if the request is slow, log it. 如果这个请求太慢，就记录一下
                 long requestLifetime = SystemClock.elapsedRealtime() - requestStart;
                 logSlowRequests(requestLifetime, request, responseContents, statusCode);
 
+                //判断异常错误码。200-299 是成功状态码
                 if (statusCode < 200 || statusCode > 299) {
                     throw new IOException();
                 }
+
                 return new NetworkResponse(
                         statusCode,
                         responseContents,

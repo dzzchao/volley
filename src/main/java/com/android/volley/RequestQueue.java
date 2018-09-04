@@ -131,8 +131,7 @@ public class RequestQueue {
         // Create network dispatchers (and corresponding threads) up to the pool size.
         for (int i = 0; i < mDispatchers.length; i++) {
             // 线程
-            NetworkDispatcher networkDispatcher =
-                    new NetworkDispatcher(mNetworkQueue, mNetwork, mCache, mDelivery);
+            NetworkDispatcher networkDispatcher = new NetworkDispatcher(mNetworkQueue, mNetwork, mCache, mDelivery);
             mDispatchers[i] = networkDispatcher;
             networkDispatcher.start();
         }
