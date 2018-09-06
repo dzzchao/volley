@@ -158,7 +158,7 @@ public class NetworkResponse {
     /** True if the server returned a 304 (Not Modified). */
     public final boolean notModified;
 
-    /** Network roundtrip time in milliseconds. */
+    /** Network roundtrip time in milliseconds. 请求耗时 */
     public final long networkTimeMs;
 
     private static Map<String, String> toHeaderMap(List<Header> allHeaders) {

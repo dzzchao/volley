@@ -20,10 +20,12 @@ package com.android.volley;
 public interface Network {
     /**
      * Performs the specified request.
+     * 执行特定的请求
      *
      * @param request Request to process
      * @return A {@link NetworkResponse} with data and caching metadata; will never be null
      * @throws VolleyError on errors
      */
     NetworkResponse performRequest(Request<?> request) throws VolleyError;
+
 }

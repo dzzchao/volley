@@ -93,7 +93,7 @@ public class DiskBasedCache implements Cache {
         this(rootDirectory, DEFAULT_DISK_USAGE_BYTES);
     }
 
-    /** Clears the cache. Deletes all cached files from disk. */
+    /** Clears the cache. Deletes all cached files from disk.清空所有的缓存文件 */
     @Override
     public synchronized void clear() {
         File[] files = mRootDirectory.listFiles();
@@ -107,7 +107,9 @@ public class DiskBasedCache implements Cache {
         VolleyLog.d("Cache cleared.");
     }
 
-    /** Returns the cache entry with the specified key if it exists, null otherwise. */
+    /** Returns the cache entry with the specified key if it exists, null otherwise.
+     * 从缓存中得到数据。先从摘要信息中得到摘要信息，然后读取缓存数据文件得到内容。
+     * */
     @Override
     public synchronized Entry get(String key) {
         CacheHeader entry = mEntries.get(key);
@@ -184,9 +186,10 @@ public class DiskBasedCache implements Cache {
 
     /**
      * Invalidates an entry in the cache.
+     * 初始化，扫描缓存目录得到所有缓存数据摘要信息放入内存。
      *
      * @param key Cache key
-     * @param fullExpire True to fully expire the entry, false to soft expire
+     * @param fullExpire True to fully expire the entry, false to soft expire  （expire到期
      */
     @Override
     public synchronized void invalidate(String key, boolean fullExpire) {
@@ -200,7 +203,8 @@ public class DiskBasedCache implements Cache {
         }
     }
 
-    /** Puts the entry with the specified key into the cache. */
+    /** Puts the entry with the specified key into the cache.
+     * 将数据存入缓存内。先检查缓存是否会满，会则先删除缓存中部分数据，然后再新建缓存文件。*/
     @Override
     public synchronized void put(String key, Entry entry) {
         // If adding this entry would trigger a prune, but pruning would cause the new entry to be
@@ -265,7 +269,8 @@ public class DiskBasedCache implements Cache {
         return new File(mRootDirectory, getFilenameForKey(key));
     }
 
-    /** Prunes the cache to fit the maximum size. */
+    /** Prunes the cache to fit the maximum size.
+     * 检查是否能再分配 neededSpace 字节的空间，如果不能则删除缓存中部分数据。 */
     private void pruneIfNeeded() {
         if (mTotalSize < mMaxCacheSizeInBytes) {
             return;
@@ -358,7 +363,7 @@ public class DiskBasedCache implements Cache {
         return new FileOutputStream(file);
     }
 
-    /** Handles holding onto the cache headers for an entry. */
+    /** Handles holding onto the cache headers for an entry.缓存文件摘要信息，存储在缓存文件的头部， */
     @VisibleForTesting
     static class CacheHeader {
         /**

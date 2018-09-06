@@ -18,7 +18,7 @@ package com.android.volley.toolbox;
 
 import com.android.volley.Cache;
 
-/** A cache that doesn't. */
+/** A cache that doesn't. 不做任何操作的缓存实现类 */
 public class NoCache implements Cache {
     @Override
     public void clear() {}
