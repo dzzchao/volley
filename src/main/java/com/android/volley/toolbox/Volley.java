@@ -40,6 +40,7 @@ public class Volley {
     public static RequestQueue newRequestQueue(Context context, BaseHttpStack stack) {
         BasicNetwork network;
         if (stack == null) {
+            //默认是null
             if (Build.VERSION.SDK_INT >= 9) {
                 network = new BasicNetwork(new HurlStack());
             } else {
@@ -54,8 +55,8 @@ public class Volley {
                             context.getPackageManager().getPackageInfo(packageName, /* flags= */ 0);
                     userAgent = packageName + "/" + info.versionCode;
                 } catch (NameNotFoundException e) {
-                }
 
+                }
                 network =
                         new BasicNetwork(
                                 new HttpClientStack(AndroidHttpClient.newInstance(userAgent)));
@@ -63,7 +64,6 @@ public class Volley {
         } else {
             network = new BasicNetwork(stack);
         }
-
         return newRequestQueue(context, network);
     }
 
